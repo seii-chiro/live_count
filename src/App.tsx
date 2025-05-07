@@ -1,12 +1,13 @@
 import { createBrowserRouter, RouterProvider } from "react-router"
 import RootLayout from "@/layout/RootLayout"
-import Map from "@/map/Map"
-import { Suspense } from "react"
+import { lazy, Suspense } from "react"
 import Spinner from "@/components/Spinner"
-import Results from "./pages/Results"
-import Senate from "./pages/Senate"
-import PartyList from "./pages/PartyList"
-import Local from "./pages/Local"
+
+const Results = lazy(() => import("./pages/Results"));
+const Senate = lazy(() => import("./pages/Senate"));
+const PartyList = lazy(() => import("./pages/PartyList"));
+const Local = lazy(() => import("./pages/Local"));
+const Map = lazy(() => import("@/map/Map"));
 
 function App() {
   const router = createBrowserRouter([
@@ -14,7 +15,6 @@ function App() {
       path: "*",
       element: <div>404</div>
     },
-
     {
       path: "/",
       element: <RootLayout />,
