@@ -4,7 +4,18 @@ import {
     flexRender,
     createColumnHelper,
     type Row,
+    type ColumnDef
 } from '@tanstack/react-table';
+import clsx from 'clsx';
+
+declare module '@tanstack/react-table' {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint, @typescript-eslint/no-unused-vars
+    interface ColumnMeta<TData extends unknown, TValue> {
+        width?: string;
+        align?: 'left' | 'center' | 'right';
+        padding?: string;
+    }
+}
 
 type LocalResults = {
     location: string;
@@ -14,30 +25,21 @@ type LocalResults = {
 
 type Props = {
     region: number | string;
+    votesData: LocalResults[]
 }
 
-const data: LocalResults[] = [
-    { location: 'MANILA', percent: 80.0, precincts: '1024 of 1024' },
-    { location: 'QUEZON CITY', percent: 76.4, precincts: '1845 of 2415' },
-    { location: 'MAKATI', percent: 93.2, precincts: '500 of 536' },
-    { location: 'TAGUIG', percent: 88.0, precincts: '612 of 695' },
-    { location: 'PASIG', percent: 71.5, precincts: '840 of 1175' },
-    { location: 'MANDALUYONG', percent: 85.0, precincts: '320 of 376' },
-    { location: 'SAN JUAN', percent: 90.5, precincts: '150 of 166' },
-    { location: 'PARAÑAQUE', percent: 77.3, precincts: '680 of 880' },
-    { location: 'LAS PIÑAS', percent: 79.1, precincts: '450 of 569' },
-    { location: 'PASAY', percent: 81.6, precincts: '380 of 466' },
-    { location: 'MUNTINLUPA', percent: 82.0, precincts: '370 of 452' },
-    { location: 'MARIKINA', percent: 75.9, precincts: '290 of 382' },
-    { location: 'NAVOTAS', percent: 74.2, precincts: '190 of 256' },
-    { location: 'MALABON', percent: 70.6, precincts: '210 of 297' },
-    { location: 'VALENZUELA', percent: 68.3, precincts: '600 of 878' },
-    { location: 'CALOOCAN', percent: 65.9, precincts: '1100 of 1669' },
-];
+// Define a type for column metadata
+type ColumnMeta = {
+    width?: string;
+    align?: 'left' | 'center' | 'right';
+    padding?: string;
+}
 
 const columnHelper = createColumnHelper<LocalResults>();
 
-const columns = [
+// Define columns with proper type for meta
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const columns: ColumnDef<LocalResults, any>[] = [
     {
         id: 'index',
         cell: ({ row }: { row: Row<LocalResults> }) => (
@@ -45,81 +47,103 @@ const columns = [
                 {row.index + 1}
             </div>
         ),
-        footer: () => <div className="w-full text-[#8E8E8E]">Est. 81% votes in</div>,
+        meta: {
+            width: '12px',
+            align: 'left'
+        } as ColumnMeta
     },
     columnHelper.accessor('location', {
         header: () => 'LOCATION',
         cell: info => <strong>{info.getValue()}</strong>,
+        meta: {
+            align: 'left',
+            padding: 'pl-2',
+        } as ColumnMeta
     }),
     columnHelper.accessor('percent', {
         header: () => 'PERCENT',
         cell: info => `${info.getValue().toFixed(2)}%`,
+        meta: {
+            align: 'center'
+        } as ColumnMeta
     }),
     columnHelper.accessor('precincts', {
         header: () => 'PRECINCTS',
         cell: info => info.getValue(),
-        footer: () => <div className="w-full text-right text-[#8E8E8E]">Updated: 2:47 PM - May 13, 2022</div>,
+        meta: {
+            align: 'right',
+            padding: 'pr-8',
+        } as ColumnMeta
     }),
 ];
 
 
-const ResultCard = ({ region }: Props) => {
-    const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel() });
+const ResultCard = ({ region, votesData }: Props) => {
+    const table = useReactTable({ data: votesData, columns, getCoreRowModel: getCoreRowModel() });
 
     return (
-        <div className='w-full font-[Roboto_Condensed] rounded-md overflow-hidden border border-[#D8D8D8] shadow'>
+        <div className="w-full font-[Roboto_Condensed] rounded-md overflow-hidden border border-[#D8D8D8] shadow flex flex-col min-h-[300px] bg-white">
             <div className='w-full bg-[#FFEEC4] flex p-2'>
                 <div className='bg-white rounded-md px-2 py-1'>
-                    <p className='text-sm font-semibold'>REGION {region}</p>
+                    <p className='font-semibold text-xs md:text-sm lg:text-base'>REGION {region}</p>
                 </div>
             </div>
-            <table className="w-full border-collapse text-sm">
-                <thead className="bg-gray-100 text-left">
-                    {
-                        table.getHeaderGroups().map(headerGroup => (
-                            <tr key={headerGroup.id}>
-                                {headerGroup.headers.map(header => (
-                                    <th key={header.id} className="px-4 py-2 border-b border-black/10 text-center">
-                                        {flexRender(header.column.columnDef.header, header.getContext())}
-                                    </th>
+            <div className="flex-grow">
+                <table className="w-full border-collapse text-sm">
+                    <thead className="text-left">
+                        {
+                            table.getHeaderGroups().map(headerGroup => (
+                                <tr key={headerGroup.id}>
+                                    {headerGroup.headers.map(header => (
+                                        <th
+                                            key={header.id}
+                                            className={clsx('py-2 border-b border-black/10', {
+                                                'text-left': header.column.columnDef.meta?.align === 'left',
+                                                'text-center': header.column.columnDef.meta?.align === 'center',
+                                                'text-right': header.column.columnDef.meta?.align === 'right',
+                                            }, header.column.columnDef.meta?.padding
+                                            )}
+                                            style={{ width: header.column.columnDef.meta?.width }}
+                                        >
+                                            {flexRender(header.column.columnDef.header, header.getContext())}
+                                        </th>
+                                    ))}
+                                </tr>
+                            ))
+                        }
+                    </thead>
+                    <tbody>
+                        {table.getRowModel().rows.map(row => (
+                            <tr key={row.id} className="relative h-12 group">
+                                {row.getVisibleCells().map(cell => (
+                                    <td
+                                        key={cell.id}
+                                        className={clsx('border-b border-black/10 h-12 relative font-semibold z-10 bg-white group-hover:bg-gray-50 text-xs sm:text-sm lg:text-base', {
+                                            'text-left': cell.column.columnDef.meta?.align === 'left',
+                                            'text-center': cell.column.columnDef.meta?.align === 'center',
+                                            'text-right': cell.column.columnDef.meta?.align === 'right',
+                                        }, cell.column.columnDef.meta?.padding
+                                        )}
+                                    >
+                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                    </td>
                                 ))}
+                                {/* Background progress bar element that spans full width */}
+                                <div className="absolute left-0 top-0 h-full w-full z-10 pointer-events-none">
+                                    <div
+                                        className="h-full bg-black/10 transition-all duration-500 ease-in-out"
+                                        style={{ width: `${row.original.percent}%` }}
+                                    />
+                                </div>
                             </tr>
-                        ))
-                    }
-                </thead>
-                <tbody>
-                    {table.getRowModel().rows.map(row => (
-                        <tr key={row.id} className="relative h-12 group">
-                            {row.getVisibleCells().map(cell => (
-                                <td
-                                    key={cell.id}
-                                    className="border-b border-black/10 h-12 text-center relative z-10 bg-white group-hover:bg-gray-50"
-                                >
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </td>
-                            ))}
-                            {/* Background progress bar element that spans full width */}
-                            <div className="absolute left-0 top-0 h-full w-full z-10 pointer-events-none">
-                                <div
-                                    className="h-full bg-black/10"
-                                    style={{ width: `${row.original.percent}%` }}
-                                />
-                            </div>
-                        </tr>
-                    ))}
-                </tbody>
-                <tfoot className="bg-gray-100 text-left">
-                    {table.getFooterGroups().map(footerGroup => (
-                        <tr key={footerGroup.id}>
-                            {footerGroup.headers.map(header => (
-                                <th key={header.id} className="px-4 py-2 border-t">
-                                    {flexRender(header.column.columnDef.footer, header.getContext())}
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                </tfoot>
-            </table>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="bg-gray-100 w-full flex justify-between px-2 py-1 text-xs md:text-sm lg:text-base">
+                <div className="text-[#8E8E8E]">Est. 81% votes in</div>
+                <div className="text-[#8E8E8E]">Updated: 2:47 PM - May 13, 2022</div>
+            </div>
         </div>
     );
 }
