@@ -159,8 +159,8 @@ const PartyListCard = ({ region, votesData, estimatedVotesIn, lastUpdate }: Prop
                                     <div
                                         className="h-full bg-black/10 transition-all duration-500 ease-in-out"
                                         style={{
-                                            marginLeft: '80px',
-                                            width: `calc((100% - 80px) * ${row.original.percent / 100})`
+                                            marginLeft: showPartylistPhoto ? '80px' : '32px',
+                                            width: `calc((100% - ${showPartylistPhoto ? '80px' : '32px'}) * ${row.original.percent / 100})`,
                                         }}
                                     />
                                 </div>

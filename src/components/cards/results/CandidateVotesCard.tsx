@@ -9,6 +9,7 @@ import {
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import fallback_img from "@/assets/fallback_img.png"
+import { useSettingsStore } from '@/store/useSettingsStore';
 
 declare module '@tanstack/react-table' {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint, @typescript-eslint/no-unused-vars
@@ -56,74 +57,83 @@ const rankColors = [
 
 const columnHelper = createColumnHelper<TableDataProps>();
 
-// Define columns with proper type for meta
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const columns: ColumnDef<TableDataProps, any>[] = [
-    {
-        id: 'index',
-        cell: ({ row }: { row: Row<TableDataProps> }) => (
-            <div
-                className="text-white px-2 py-1 w-8 h-full flex justify-center items-center"
-                style={{
-                    backgroundColor: row.index < 12 ? rankColors[row.index] : '#8E8E8E'
-                }}
-            >
-                {row.index + 1}
-            </div>
-        ),
-        meta: {
-            width: '12px',
-            align: 'left'
-        } as ColumnMeta
-    },
-    columnHelper.accessor('name', {
-        header: () => 'CANDIDATE',
-        cell: info => {
-            const row = info.row.original;
-            return (
-                <div className="flex items-center gap-2">
-                    <img
-                        src={row.imgSrc || fallback_img}
-                        alt={row.name}
-                        className="w-8 h-8 rounded-full object-cover"
-                    />
-                    <div className="flex flex-col">
-                        <span className="pl-1 text-black font-semibold leading-tight">
-                            {row.name}
-                        </span>
-                        <span className="pl-1 text-xs text-gray-500 leading-tight">
-                            {row.partylist}
-                        </span>
-                    </div>
-                </div>
-            );
-        },
-        meta: {
-            align: 'left',
-            padding: 'pl-2',
-        } as ColumnMeta
-    }),
-    columnHelper.accessor('percent', {
-        header: () => 'PERCENT',
-        cell: info => `${info.getValue().toFixed(2)}%`,
-        meta: {
-            align: 'center'
-        } as ColumnMeta
-    }),
-    columnHelper.accessor('votes', {
-        header: () => 'VOTES',
-        cell: info => (info.getValue())?.toLocaleString(),
-        meta: {
-            align: 'right',
-            padding: 'pr-8',
-        } as ColumnMeta
-    }),
-];
-
 const tabs = ['Senators', 'PartyList'] as const;
 
 const CandidateVotesCard = ({ region, votesData, estimatedVotesIn, lastUpdate }: Props) => {
     const [activeTab, setActiveTab] = useState<TabType>('Senators');
+    const { showPartylistPhoto, showSenatorPhoto } = useSettingsStore()
+
+    const showPhoto = useMemo(() => {
+        if (activeTab === 'Senators') return showSenatorPhoto;
+        if (activeTab === 'PartyList') return showPartylistPhoto;
+        return false;
+    }, [activeTab, showPartylistPhoto, showSenatorPhoto]);
+
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const columns: ColumnDef<TableDataProps, any>[] = [
+        {
+            id: 'index',
+            cell: ({ row }: { row: Row<TableDataProps> }) => (
+                <div
+                    className="text-white px-2 py-1 w-8 h-full flex justify-center items-center"
+                    style={{
+                        backgroundColor: row.index < 12 ? rankColors[row.index] : '#8E8E8E'
+                    }}
+                >
+                    {row.index + 1}
+                </div>
+            ),
+            meta: {
+                width: '12px',
+                align: 'left'
+            } as ColumnMeta
+        },
+        columnHelper.accessor('name', {
+            header: () => 'CANDIDATE',
+            cell: info => {
+                const row = info.row.original;
+                return (
+                    <div className="flex items-center gap-2">
+                        {showPhoto && (
+                            <img
+                                src={row.imgSrc || fallback_img}
+                                alt={row.name}
+                                className="w-8 h-8 rounded-full object-cover"
+                            />
+                        )}
+                        <div className="flex flex-col">
+                            <span className="pl-1 text-black font-semibold leading-tight">
+                                {row.name}
+                            </span>
+                            <span className="pl-1 text-xs text-gray-500 leading-tight">
+                                {row.partylist}
+                            </span>
+                        </div>
+                    </div>
+                );
+            },
+            meta: {
+                align: 'left',
+                padding: 'pl-2',
+            } as ColumnMeta
+        }),
+        columnHelper.accessor('percent', {
+            header: () => 'PERCENT',
+            cell: info => `${info.getValue().toFixed(2)}%`,
+            meta: {
+                align: 'center'
+            } as ColumnMeta
+        }),
+        columnHelper.accessor('votes', {
+            header: () => 'VOTES',
+            cell: info => (info.getValue())?.toLocaleString(),
+            meta: {
+                align: 'right',
+                padding: 'pr-8',
+            } as ColumnMeta
+        }),
+    ];
 
     const sortedData = useMemo(() => {
         const data = votesData[activeTab] ?? [];
@@ -209,9 +219,9 @@ const CandidateVotesCard = ({ region, votesData, estimatedVotesIn, lastUpdate }:
                                     <div
                                         className="h-full transition-all duration-500 ease-in-out"
                                         style={{
-                                            marginLeft: '80px',
-                                            width: `calc((100% - 80px) * ${row.original.percent / 100})`,
-                                            backgroundColor: `${rankColors[row.index % 12]}1F`, // 1F = ~12.2% opacity (hex / 12)
+                                            marginLeft: showPhoto ? '80px' : '32px',
+                                            width: `calc((100% - ${showPhoto ? '80px' : '32px'}) * ${row.original.percent / 100})`,
+                                            backgroundColor: `${rankColors[row.index % 12]}1F`,
                                         }}
                                     />
                                 </div>

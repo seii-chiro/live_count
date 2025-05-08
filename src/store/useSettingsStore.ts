@@ -4,13 +4,19 @@ import { persist } from "zustand/middleware";
 interface SettingsState {
   showPartylistPhoto: boolean;
   setShowPartylistPhoto: (value: boolean) => void;
+
+  showSenatorPhoto: boolean;
+  setShowSenatorPhoto: (value: boolean) => void;
 }
 
 export const useSettingsStore = create(
   persist<SettingsState>(
     (set) => ({
-      showPartylistPhoto: true,
+      showPartylistPhoto: false,
       setShowPartylistPhoto: (value) => set({ showPartylistPhoto: value }),
+
+      showSenatorPhoto: true,
+      setShowSenatorPhoto: (value) => set({ showSenatorPhoto: value }),
     }),
     {
       name: "settings-session",
