@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-table';
 import clsx from 'clsx';
 import { useMemo } from 'react';
+import fallback_img from "@/assets/fallback_img.png"
 
 declare module '@tanstack/react-table' {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint, @typescript-eslint/no-unused-vars
@@ -23,6 +24,7 @@ type Candidates_Partylist = {
     percent: number;
     votes: number;
     partylist: string;
+    imgSrc: string | null;
 }
 
 
@@ -73,9 +75,20 @@ const columns: ColumnDef<Candidates_Partylist, any>[] = [
         cell: info => {
             const row = info.row.original;
             return (
-                <div className="flex flex-col">
-                    <strong className="text-black">{row.name}</strong>
-                    <span className="text-xs text-gray-500">{row.partylist}</span>
+                <div className="flex items-center gap-2">
+                    <img
+                        src={row.imgSrc || fallback_img}
+                        alt={row.name}
+                        className="w-8 h-8 rounded-full object-cover"
+                    />
+                    <div className="flex flex-col">
+                        <span className="text-black font-semibold leading-tight">
+                            {row.name}
+                        </span>
+                        <span className="text-xs text-gray-500 leading-tight">
+                            {row.partylist}
+                        </span>
+                    </div>
                 </div>
             );
         },
