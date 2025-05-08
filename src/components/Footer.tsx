@@ -47,7 +47,7 @@ const Footer = () => {
         {/* QuickLinks - only visible on md+ */}
         <div className="hidden lg:flex w-full flex-wrap items-center justify-between text-sm">
           {quickLinks.map((link, index) => (
-            <Link key={index} className="text-[#E9BC49]" to="#">
+            <Link key={index} className="text-[#E9BC49]" to="settings">
               {link}
             </Link>
           ))}

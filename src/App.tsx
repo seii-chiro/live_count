@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router"
 import RootLayout from "@/layout/RootLayout"
 import { lazy, Suspense } from "react"
 import Spinner from "@/components/Spinner"
+import Settings from "./pages/Settings";
 
 const Results = lazy(() => import("./pages/Results"));
 const Senate = lazy(() => import("./pages/Senate"));
@@ -45,6 +46,10 @@ function App() {
       path: "map",
       element: <Map />
     },
+    {
+      path: "settings",
+      element: <Settings />
+    }
   ])
 
 
