@@ -140,7 +140,7 @@ const SenatorsCard = ({ region, votesData, estimatedVotesIn, lastUpdate }: Props
                     <p className='font-semibold text-xs md:text-sm lg:text-base'>{region}</p>
                 </div>
             </div>
-            <div className="flex-grow overflow-y-auto" style={{ maxHeight: 'calc(3.19rem * 12)' }}>
+            <div className="flex-grow overflow-y-auto scrollbar-hide" style={{ maxHeight: 'calc(3.19rem * 12)' }}>
                 <table className="w-full border-collapse text-sm">
                     <thead className="text-left">
                         {

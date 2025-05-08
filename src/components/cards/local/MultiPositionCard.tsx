@@ -10,6 +10,7 @@ import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import fallback_img from "@/assets/fallback_img.png"
 import { useSettingsStore } from '@/store/useSettingsStore';
+import Select from '@/components/Select';
 
 declare module '@tanstack/react-table' {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint, @typescript-eslint/no-unused-vars
@@ -20,26 +21,21 @@ declare module '@tanstack/react-table' {
     }
 }
 
-type TabType = typeof tabs[number];
-
 type Candidates_Partylist = {
     name: string;
     percent: number;
     votes: number;
-    partylist?: string;
+    partylist: string;
     imgSrc: string | null;
 }
 
-type TableDataProps = {
-    Senators: Candidates_Partylist[];
-    PartyList: Candidates_Partylist[];
-};
 
 type Props = {
     region: number | string;
-    votesData: TableDataProps
+    votesData: Candidates_Partylist[]
     lastUpdate: string;
     estimatedVotesIn: string;
+    location: string;
 }
 
 // Define a type for column metadata
@@ -55,26 +51,16 @@ const rankColors = [
 ];
 
 
-const columnHelper = createColumnHelper<TableDataProps>();
+const columnHelper = createColumnHelper<Candidates_Partylist>();
 
-const tabs = ['Senators', 'PartyList'] as const;
-
-const CandidateVotesCard = ({ region, votesData, estimatedVotesIn, lastUpdate }: Props) => {
-    const [activeTab, setActiveTab] = useState<TabType>('Senators');
-    const { showPartylistPhoto, showSenatorPhoto } = useSettingsStore()
-
-    const showPhoto = useMemo(() => {
-        if (activeTab === 'Senators') return showSenatorPhoto;
-        if (activeTab === 'PartyList') return showPartylistPhoto;
-        return false;
-    }, [activeTab, showPartylistPhoto, showSenatorPhoto]);
-
-
+const MultiPositionCard = ({ region, votesData, estimatedVotesIn, lastUpdate, location }: Props) => {
+    const showSenatorPhoto = useSettingsStore()?.showSenatorPhoto
+    const [selectedPosition, setSelectedPosition] = useState("")
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const columns: ColumnDef<TableDataProps, any>[] = [
+    const columns: ColumnDef<Candidates_Partylist, any>[] = [
         {
             id: 'index',
-            cell: ({ row }: { row: Row<TableDataProps> }) => (
+            cell: ({ row }: { row: Row<Candidates_Partylist> }) => (
                 <div
                     className="text-white px-2 py-1 w-8 h-full flex justify-center items-center"
                     style={{
@@ -95,7 +81,7 @@ const CandidateVotesCard = ({ region, votesData, estimatedVotesIn, lastUpdate }:
                 const row = info.row.original;
                 return (
                     <div className="flex items-center gap-2">
-                        {showPhoto && (
+                        {showSenatorPhoto && (
                             <img
                                 src={row.imgSrc || fallback_img}
                                 alt={row.name}
@@ -136,9 +122,9 @@ const CandidateVotesCard = ({ region, votesData, estimatedVotesIn, lastUpdate }:
     ];
 
     const sortedData = useMemo(() => {
-        const data = votesData[activeTab] ?? [];
+        const data = votesData ?? [];
         return [...data].sort((a, b) => b.votes - a.votes);
-    }, [activeTab, votesData]);
+    }, [votesData]);
 
     const table = useReactTable({
         data: sortedData,
@@ -146,35 +132,38 @@ const CandidateVotesCard = ({ region, votesData, estimatedVotesIn, lastUpdate }:
         getCoreRowModel: getCoreRowModel(),
     });
 
+    const positions = [
+        { label: "Governor", value: "Governor" },
+        { label: "Vice-Governor", value: "Vice-Governor" },
+        { label: "Member, House of Representatives - FIRST LEGDIST", value: "Member, House of Representatives - FIRST LEGDIST" },
+        { label: "Member, House of Representatives - SECOND LEGDIST", value: "Member, House of Representatives - SECOND LEGDIST" },
+        { label: "Member, Sangguniang Panlalawigan - FIRST LEGDIST", value: "Member, Sangguniang Panlalawigan - FIRST LEGDIST" },
+        { label: "Member, Sangguniang Panlalawigan - SECOND LEGDIST", value: "Member, Sangguniang Panlalawigan - SECOND LEGDIST" }
+    ];
 
     return (
-        <div className="w-full font-[Roboto_Condensed] rounded-md overflow-hidden border border-[#D8D8D8] shadow flex flex-col min-h-[300px] bg-white">
-            <div className='w-full bg-[#FFEEC4] flex flex-col p-2 gap-2'>
-                <div className='bg-white rounded-md px-2 py-1 w-fit'>
-                    <p className='font-semibold text-xs md:text-sm lg:text-base'>{region}</p>
+        <div className="w-full font-[Roboto_Condensed] rounded-md overflow-hidden border border-[#D8D8D8] shadow flex flex-col min-h-[700px] bg-white">
+            <div className='w-full bg-[#FFEEC4] flex flex-col items-center px-2 py-3'>
+                <div className='w-full bg-[#FFEEC4] flex items-center px-2 py-2 gap-2'>
+                    <div className='bg-white rounded-md px-2 w-fit'>
+                        <p className='font-semibold text-xs md:text-sm lg:text-base'>{String(region)?.toLocaleUpperCase()}</p>
+                    </div>
+                    <div className='w-fit bg-[#EBB136] rounded-md px-2'>
+                        <p className='text-white font-semibold text-xs md:text-sm lg:text-base'>{location?.toLocaleUpperCase()}</p>
+                    </div>
                 </div>
-                <div className="w-full flex bg-white rounded-md overflow-hidden border border-black/10">
-                    {tabs.map(tab => (
-                        <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab)}
-                            className={clsx(
-                                'px-3 py-1 text-xs md:text-sm lg:text-base transition-all flex-1 rounded-md',
-                                {
-                                    'bg-black font-bold text-white': activeTab === tab,
-                                    'hover:bg-gray-100 text-black': activeTab !== tab,
-                                }
-                            )}
-                        >
-                            {
-                                tab === "PartyList" ? "Party-List" : tab
-                            }
-                        </button>
-                    ))}
+                <div className='w-full px-2 pb-1'>
+                    <Select
+                        options={positions}
+                        value={selectedPosition}
+                        onChange={setSelectedPosition}
+                        placeholder='Select a Position'
+                    />
                 </div>
             </div>
-
-            <div className="flex-grow overflow-y-auto scrollbar-hide" style={{ maxHeight: 'calc(3.19rem * 12)' }}>
+            <div>
+            </div>
+            <div className="flex-grow overflow-y-auto" style={{ maxHeight: 'calc(3.19rem * 12)' }}>
                 <table className="w-full border-collapse text-sm">
                     <thead className="text-left">
                         {
@@ -219,8 +208,8 @@ const CandidateVotesCard = ({ region, votesData, estimatedVotesIn, lastUpdate }:
                                     <div
                                         className="h-full transition-all duration-500 ease-in-out"
                                         style={{
-                                            marginLeft: showPhoto ? '80px' : '32px',
-                                            width: `calc((100% - ${showPhoto ? '80px' : '32px'}) * ${row.original.percent / 100})`,
+                                            marginLeft: showSenatorPhoto ? '80px' : '32px',
+                                            width: `calc((100% - ${showSenatorPhoto ? '80px' : '32px'}) * ${row.original.percent / 100})`,
                                             backgroundColor: `${rankColors[row.index % 12]}1F`,
                                         }}
                                     />
@@ -239,4 +228,4 @@ const CandidateVotesCard = ({ region, votesData, estimatedVotesIn, lastUpdate }:
     );
 };
 
-export default CandidateVotesCard;
+export default MultiPositionCard;
