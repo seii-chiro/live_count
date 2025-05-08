@@ -1,18 +1,8 @@
-import CandidateVotesCard from "@/components/CandidateVotesCard";
-import ResultCard from "@/components/ResultCard"
+import CandidateVotesCard from "@/components/cards/results/CandidateVotesCard";
+import ResultCard from "@/components/cards/results/ResultCard"
 import Map from "@/map/Map"
 
 const data = [
-  { location: 'CAGAYAN', percent: 74.8, precincts: '950 of 1270' },
-  { location: 'ISABELA', percent: 79.5, precincts: '1250 of 1575' },
-  { location: 'NUEVA VIZCAYA', percent: 81.2, precincts: '580 of 715' },
-  { location: 'QUIRINO', percent: 77.4, precincts: '330 of 425' },
-
-  { location: 'BATAAN', percent: 82.5, precincts: '750 of 910' },
-  { location: 'ZAMBALES', percent: 79.3, precincts: '670 of 845' },
-  { location: 'AURORA', percent: 76.1, precincts: '350 of 460' },
-  { location: 'TARLAC', percent: 80.0, precincts: '1200 of 1500' },
-
   { location: 'BATANGAS', percent: 78.6, precincts: '1600 of 2035' },
   { location: 'CAVITE', percent: 81.9, precincts: '2100 of 2565' },
   { location: 'LAGUNA', percent: 77.5, precincts: '1800 of 2320' },
@@ -100,13 +90,45 @@ const carData = [
   { location: 'PANGASINAN', percent: 83.1, precincts: '2900 of 3485' },
 ]
 
+const region1Data = [
+  { location: 'CAGAYAN', percent: 74.8, precincts: '950 of 1270' },
+  { location: 'ISABELA', percent: 79.5, precincts: '1250 of 1575' },
+  { location: 'NUEVA VIZCAYA', percent: 81.2, precincts: '580 of 715' },
+  { location: 'QUIRINO', percent: 77.4, precincts: '330 of 425' },
+]
+
+const region2Data = [
+  { location: 'BATAAN', percent: 82.5, precincts: '750 of 910' },
+  { location: 'ZAMBALES', percent: 79.3, precincts: '670 of 845' },
+  { location: 'AURORA', percent: 76.1, precincts: '350 of 460' },
+  { location: 'TARLAC', percent: 80.0, precincts: '1200 of 1500' },
+]
+
 const Candidate_PartylistData = {
   Senators: [
     ...candidates
   ],
   PartyList: [
-    { name: 'Party A', percent: 45.1, votes: 17_654_321 },
-    { name: 'Party B', percent: 38.2, votes: 15_432_789 }
+    { name: 'Party A', percent: 78.3, votes: 19_654_321 },
+    { name: 'Party B', percent: 14.6, votes: 7_432_789 },
+    { name: 'Party C', percent: 93.2, votes: 22_789_012 },
+    { name: 'Party D', percent: 50.1, votes: 12_234_567 },
+    { name: 'Party E', percent: 8.7, votes: 4_678_910 },
+    { name: 'Party F', percent: 61.9, votes: 15_456_789 },
+    { name: 'Party G', percent: 27.4, votes: 9_321_987 },
+    { name: 'Party H', percent: 89.0, votes: 21_250_123 },
+    { name: 'Party I', percent: 35.6, votes: 10_198_456 },
+    { name: 'Party J', percent: 5.2, votes: 2_172_345 },
+    { name: 'Party K', percent: 44.3, votes: 11_950_678 },
+    { name: 'Party L', percent: 76.8, votes: 18_634_567 },
+    { name: 'Party M', percent: 12.9, votes: 3_210_456 },
+    { name: 'Party N', percent: 68.5, votes: 17_998_321 },
+    { name: 'Party O', percent: 95.1, votes: 24_852_234 },
+    { name: 'Party P', percent: 31.7, votes: 9_751_123 },
+    { name: 'Party Q', percent: 23.4, votes: 6_629_987 },
+    { name: 'Party R', percent: 87.2, votes: 20_506_678 },
+    { name: 'Party S', percent: 42.8, votes: 11_403_345 },
+    { name: 'Party T', percent: 3.9, votes: 1_251_123 },
   ]
 };
 
@@ -114,13 +136,18 @@ const Candidate_PartylistData = {
 const Results = () => {
   return (
     <>
-      <div className="w-full border-y border-[#D8D8D8] mt-8">
-        <div className="w-[90%] flex items-center mx-auto">
+      <div className="w-full border-y border-[#D8D8D8] mt-8 py-10 lg:py-0">
+        <div className="w-[90%] flex flex-col lg:flex-row items-center mx-auto">
           <div className="flex-grow">
             <Map />
           </div>
-          <div className="w-[30%]">
-            <CandidateVotesCard region={"PHILIPPINES"} votesData={Candidate_PartylistData} />
+          <div className="lg:w-[30%]">
+            <CandidateVotesCard
+              region={"PHILIPPINES"}
+              votesData={Candidate_PartylistData}
+              estimatedVotesIn="Est. 81% votes in"
+              lastUpdate="Updated: 2:47 PM - May 13, 2022"
+            />
           </div>
         </div>
       </div>
@@ -131,8 +158,33 @@ const Results = () => {
             <p className="font-bold text-xl">LOCAL RESULTS</p>
           </div>
           <div className="flex flex-col lg:flex-row gap-8">
-            <ResultCard region={"NATIONAL CAPITAL REGION"} votesData={NCRData} />
-            <ResultCard region={"CORDILLERA ADMINISTRATIVE REGION"} votesData={carData} />
+            <ResultCard
+              region={"NATIONAL CAPITAL REGION"}
+              votesData={NCRData}
+              estimatedVotesIn="Est. 81% votes in"
+              lastUpdate="Updated: 2:47 PM - May 13, 2022"
+            />
+            <ResultCard
+              region={"CORDILLERA ADMINISTRATIVE REGION"}
+              votesData={carData}
+              estimatedVotesIn="Est. 81% votes in"
+              lastUpdate="Updated: 2:47 PM - May 13, 2022"
+            />
+          </div>
+          <div className="flex flex-col lg:flex-row gap-8">
+            <ResultCard
+              region={"REGION 1"}
+              votesData={region1Data}
+              estimatedVotesIn="Est. 81% votes in"
+              lastUpdate="Updated: 2:47 PM - May 13, 2022"
+
+            />
+            <ResultCard
+              region={"REGION 2"}
+              votesData={region2Data}
+              lastUpdate="Updated: 2:47 PM - May 13, 2022"
+              estimatedVotesIn="Est. 81% votes in"
+            />
           </div>
         </div>
       </div>
