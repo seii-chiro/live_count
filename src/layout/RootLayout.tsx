@@ -11,7 +11,6 @@ const RootLayout = () => {
             <Navbar />
             <MiniHero />
 
-            {/* Main expands to fill remaining height */}
             <main className="flex-1 w-full">
                 <Outlet />
             </main>

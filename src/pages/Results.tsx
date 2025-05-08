@@ -2,41 +2,6 @@ import CandidateVotesCard from "@/components/cards/results/CandidateVotesCard";
 import ResultCard from "@/components/cards/results/ResultCard"
 import Map from "@/map/Map"
 
-const data = [
-  { location: 'BATANGAS', percent: 78.6, precincts: '1600 of 2035' },
-  { location: 'CAVITE', percent: 81.9, precincts: '2100 of 2565' },
-  { location: 'LAGUNA', percent: 77.5, precincts: '1800 of 2320' },
-  { location: 'QUEZON', percent: 79.8, precincts: '1400 of 1755' },
-
-  { location: 'CAMARINES NORTE', percent: 74.2, precincts: '600 of 810' },
-  { location: 'CAMARINES SUR', percent: 79.1, precincts: '1400 of 1770' },
-  { location: 'ALBAY', percent: 76.5, precincts: '980 of 1263' },
-  { location: 'SORSOGON', percent: 78.3, precincts: '750 of 950' },
-
-  { location: 'NEGROS OCCIDENTAL', percent: 81.0, precincts: '2200 of 2720' },
-  { location: 'NEGROS ORIENTAL', percent: 76.9, precincts: '1100 of 1430' },
-  { location: 'ILOILO', percent: 79.2, precincts: '1345 of 1713' },
-  { location: 'CAPIZ', percent: 78.5, precincts: '800 of 1020' },
-
-  { location: 'CEBU', percent: 80.3, precincts: '2200 of 2750' },
-  { location: 'BOHOL', percent: 75.8, precincts: '1100 of 1450' },
-  { location: 'LEYTE', percent: 77.9, precincts: '1225 of 1625' },
-  { location: 'SAMAR', percent: 72.5, precincts: '800 of 1125' },
-
-  { location: 'ZAMBOANGA DEL NORTE', percent: 70.2, precincts: '900 of 1280' },
-  { location: 'ZAMBOANGA DEL SUR', percent: 74.8, precincts: '1100 of 1510' },
-  { location: 'ZAMBOANGA SIBUGAY', percent: 72.9, precincts: '750 of 1025' },
-
-  { location: 'DAVAO DEL NORTE', percent: 83.5, precincts: '1200 of 1435' },
-  { location: 'DAVAO DEL SUR', percent: 82.1, precincts: '1400 of 1705' },
-  { location: 'COMPOSTELA VALLEY', percent: 78.6, precincts: '900 of 1145' },
-
-  { location: 'COTABATO', percent: 74.5, precincts: '980 of 1325' },
-  { location: 'MAGUINDANAO', percent: 76.2, precincts: '850 of 1115' },
-  { location: 'LANAO DEL NORTE', percent: 78.1, precincts: '1020 of 1305' },
-  { location: 'LANAO DEL SUR', percent: 71.9, precincts: '800 of 1110' },
-];
-
 const candidates = [
   { name: 'Go, Bong', percent: 56.8, votes: 23_435_453 },
   { name: 'Tulfo, Erwin', percent: 52.7, votes: 21_987_654 },
@@ -104,6 +69,20 @@ const region2Data = [
   { location: 'TARLAC', percent: 80.0, precincts: '1200 of 1500' },
 ]
 
+const region3Data = [
+  { location: 'CAMARINES NORTE', percent: 74.2, precincts: '600 of 810' },
+  { location: 'CAMARINES SUR', percent: 79.1, precincts: '1400 of 1770' },
+  { location: 'ALBAY', percent: 76.5, precincts: '980 of 1263' },
+  { location: 'SORSOGON', percent: 78.3, precincts: '750 of 950' },
+]
+
+const region4Data = [
+  { location: 'BATANGAS', percent: 78.6, precincts: '1600 of 2035' },
+  { location: 'CAVITE', percent: 81.9, precincts: '2100 of 2565' },
+  { location: 'LAGUNA', percent: 77.5, precincts: '1800 of 2320' },
+  { location: 'QUEZON', percent: 79.8, precincts: '1400 of 1755' },
+]
+
 const Candidate_PartylistData = {
   Senators: [
     ...candidates
@@ -141,7 +120,7 @@ const Results = () => {
           <div className="flex-grow">
             <Map />
           </div>
-          <div className="lg:w-[30%]">
+          <div className="w-full lg:w-[30%]">
             <CandidateVotesCard
               region={"PHILIPPINES"}
               votesData={Candidate_PartylistData}
@@ -182,6 +161,22 @@ const Results = () => {
             <ResultCard
               region={"REGION 2"}
               votesData={region2Data}
+              lastUpdate="Updated: 2:47 PM - May 13, 2022"
+              estimatedVotesIn="Est. 81% votes in"
+            />
+          </div>
+
+          <div className="flex flex-col lg:flex-row gap-8">
+            <ResultCard
+              region={"REGION 3"}
+              votesData={region3Data}
+              estimatedVotesIn="Est. 81% votes in"
+              lastUpdate="Updated: 2:47 PM - May 13, 2022"
+
+            />
+            <ResultCard
+              region={"REGION 4"}
+              votesData={region4Data}
               lastUpdate="Updated: 2:47 PM - May 13, 2022"
               estimatedVotesIn="Est. 81% votes in"
             />
