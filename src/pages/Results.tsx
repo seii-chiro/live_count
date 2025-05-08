@@ -1,3 +1,4 @@
+import CandidateVotesCard from "@/components/CandidateVotesCard";
 import ResultCard from "@/components/ResultCard"
 import Map from "@/map/Map"
 
@@ -99,11 +100,31 @@ const carData = [
   { location: 'PANGASINAN', percent: 83.1, precincts: '2900 of 3485' },
 ]
 
+const Candidate_PartylistData = {
+  Senators: [
+    ...candidates
+  ],
+  PartyList: [
+    { name: 'Party A', percent: 45.1, votes: 17_654_321 },
+    { name: 'Party B', percent: 38.2, votes: 15_432_789 }
+  ]
+};
+
 
 const Results = () => {
   return (
     <>
-      <Map />
+      <div className="w-full border-y border-[#D8D8D8] mt-8">
+        <div className="w-[90%] flex items-center mx-auto">
+          <div className="flex-grow">
+            <Map />
+          </div>
+          <div className="w-[30%]">
+            <CandidateVotesCard region={"PHILIPPINES"} votesData={Candidate_PartylistData} />
+          </div>
+        </div>
+      </div>
+
       <div className="flex items-center justify-center bg-[#F0F0F0]">
         <div className="w-[90%] py-10 flex flex-col gap-8">
           <div className="text-white bg-black w-full flex items-center justify-center py-2">

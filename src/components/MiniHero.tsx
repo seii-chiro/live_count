@@ -1,5 +1,5 @@
 import { LuInfo } from "react-icons/lu";
-import { ProgressBar } from "./Progressbar";
+import { ProgressBar } from "@/components/ProgressBar";
 
 const MiniHero = () => {
     const totalProcessed = 100;
@@ -11,7 +11,7 @@ const MiniHero = () => {
     const totalVotesPercentage = (totalVotes / totalRegisteredVoters) * 100;
 
     return (
-        <div className="w-full flex justify-center mt-4">
+        <div className="w-full flex justify-center mt-8">
             <div className="w-[90%] flex flex-col lg:flex-row gap-4">
                 <div className="border border-[#E9BC49] bg-[#E9BC49]/10 flex flex-col lg:flex-row items-center justify-between rounded-[10px] px-4 py-4 lg:py-0 flex-[2]">
                     <div className="flex gap-2 items-center">
