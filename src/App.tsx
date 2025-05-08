@@ -3,6 +3,8 @@ import RootLayout from "@/layout/RootLayout"
 import { lazy, Suspense } from "react"
 import Spinner from "@/components/Spinner"
 import Settings from "./pages/Settings";
+import LocalLayout from "./layout/LocalLayout";
+import Province from "./pages/Province";
 
 const Results = lazy(() => import("./pages/Results"));
 const Senate = lazy(() => import("./pages/Senate"));
@@ -38,7 +40,17 @@ function App() {
         },
         {
           path: "local",
-          element: <Local />
+          element: <LocalLayout />,
+          children: [
+            {
+              index: true,
+              element: <Local />
+            },
+            {
+              path: "province",
+              element: <Province />
+            }
+          ]
         },
       ]
     },

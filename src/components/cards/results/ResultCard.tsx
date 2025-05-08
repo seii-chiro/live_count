@@ -7,6 +7,7 @@ import {
     type ColumnDef
 } from '@tanstack/react-table';
 import clsx from 'clsx';
+import { useNavigate } from 'react-router';
 
 declare module '@tanstack/react-table' {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint, @typescript-eslint/no-unused-vars
@@ -82,6 +83,7 @@ const columns: ColumnDef<LocalResults, any>[] = [
 
 const ResultCard = ({ region, votesData, estimatedVotesIn, lastUpdate }: Props) => {
     const table = useReactTable({ data: votesData, columns, getCoreRowModel: getCoreRowModel() });
+    const navigate = useNavigate();
 
     return (
         <div className="w-full font-[Roboto_Condensed] rounded-md overflow-hidden border border-[#D8D8D8] shadow flex flex-col min-h-[300px] bg-white">
@@ -116,7 +118,11 @@ const ResultCard = ({ region, votesData, estimatedVotesIn, lastUpdate }: Props) 
                     </thead>
                     <tbody>
                         {table.getRowModel().rows.map(row => (
-                            <tr key={row.id} className="relative h-12 group">
+                            <tr
+                                key={row.id}
+                                className="relative h-12 group"
+                                onClick={() => navigate('province', { state: { rowData: row.original } })}
+                            >
                                 {row.getVisibleCells().map(cell => (
                                     <td
                                         key={cell.id}
@@ -149,7 +155,7 @@ const ResultCard = ({ region, votesData, estimatedVotesIn, lastUpdate }: Props) 
                 <div className="text-[#8E8E8E]">{estimatedVotesIn}</div>
                 <div className="text-[#8E8E8E]">{lastUpdate}</div>
             </div>
-        </div>
+        </div >
     );
 }
 
