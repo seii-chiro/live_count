@@ -1,3 +1,4 @@
+import LocalResultsCard from '@/components/cards/local/LocalResultsCard';
 import MultiPositionCard from '@/components/cards/local/MultiPositionCard';
 import MapPlaceHolder from '@/map/MapPlaceholder';
 import { useLocation } from 'react-router';
@@ -45,7 +46,56 @@ const Province = () => {
                 </div>
             </div>
 
-            
+            <div className="w-[90%] py-10 flex flex-col gap-8">
+                <div className="text-white bg-black w-full flex items-center justify-center py-2">
+                    <p className="font-bold text-center text-balance text-sm md:text-base lg:text-xl">LOCAL RESULTS - {region?.toUpperCase()}, {rowData?.location}</p>
+                </div>
+
+                <div className="flex flex-col lg:flex-row gap-8">
+                    <LocalResultsCard
+                        position='Governor'
+                        location={rowData?.location}
+                        region={region}
+                        votesData={candidates}
+                        estimatedVotesIn="Est. 81% votes in"
+                        lastUpdate="Updated: 2:47 PM - May 13, 2022"
+                    />
+                    <LocalResultsCard
+                        position='Vice-Governor'
+                        location={rowData?.location}
+                        region={region}
+                        votesData={candidates}
+                        estimatedVotesIn="Est. 81% votes in"
+                        lastUpdate="Updated: 2:47 PM - May 13, 2022"
+                    />
+                </div>
+            </div>
+
+            <div className="w-[90%] pb-10 flex flex-col gap-8">
+                <div className="text-white bg-black w-full flex items-center justify-center py-2">
+                    <p className="font-bold text-center text-balance text-sm md:text-base lg:text-xl">NATIONAL RESULTS - {region?.toUpperCase()}, {rowData?.location}</p>
+                </div>
+
+                <div className="flex flex-col lg:flex-row gap-8">
+                    <LocalResultsCard
+                        position='Governor'
+                        location={rowData?.location}
+                        region={region}
+                        votesData={candidates}
+                        estimatedVotesIn="Est. 81% votes in"
+                        lastUpdate="Updated: 2:47 PM - May 13, 2022"
+                    />
+                    <LocalResultsCard
+                        position='Vice-Governor'
+                        location={rowData?.location}
+                        region={region}
+                        votesData={candidates}
+                        estimatedVotesIn="Est. 81% votes in"
+                        lastUpdate="Updated: 2:47 PM - May 13, 2022"
+                    />
+                </div>
+            </div>
+
         </div>
     )
 }
