@@ -82,10 +82,10 @@ const columns: ColumnDef<Candidates_Partylist, any>[] = [
                         className="w-8 h-8 rounded-full object-cover"
                     />
                     <div className="flex flex-col">
-                        <span className="text-black font-semibold leading-tight">
+                        <span className="pl-1 text-black font-semibold leading-tight">
                             {row.name}
                         </span>
-                        <span className="text-xs text-gray-500 leading-tight">
+                        <span className="pl-1 text-xs text-gray-500 leading-tight">
                             {row.partylist}
                         </span>
                     </div>
@@ -184,7 +184,8 @@ const SenatorsCard = ({ region, votesData, estimatedVotesIn, lastUpdate }: Props
                                     <div
                                         className="h-full transition-all duration-500 ease-in-out"
                                         style={{
-                                            width: `${row.original.percent}%`,
+                                            marginLeft: '80px',
+                                            width: `calc((100% - 80px) * ${row.original.percent / 100})`,
                                             backgroundColor: `${rankColors[row.index % 12]}1F`, // 1F = ~12.2% opacity (hex / 12)
                                         }}
                                     />

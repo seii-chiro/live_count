@@ -7,6 +7,7 @@ import {
     type ColumnDef
 } from '@tanstack/react-table';
 import clsx from 'clsx';
+import fallback_img from "@/assets/fallback_img.png"
 
 declare module '@tanstack/react-table' {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint, @typescript-eslint/no-unused-vars
@@ -21,6 +22,7 @@ type Partylist = {
     name: string;
     percent: number;
     votes: number;
+    imgSrc: string | null;
 }
 
 type Props = {
@@ -56,7 +58,23 @@ const columns: ColumnDef<Partylist, any>[] = [
     },
     columnHelper.accessor('name', {
         header: () => 'CANDIDATE',
-        cell: info => <strong>{info.getValue()}</strong>,
+        cell: info => {
+            const row = info.row.original;
+            return (
+                <div className="flex items-center gap-2">
+                    <img
+                        src={row.imgSrc || fallback_img}
+                        alt={row.name}
+                        className="w-8 h-8 rounded-full object-cover"
+                    />
+                    <div className="flex flex-col">
+                        <span className="text-black font-semibold leading-tight pl-1">
+                            {row.name}
+                        </span>
+                    </div>
+                </div>
+            );
+        },
         meta: {
             align: 'left',
             padding: 'pl-2',
@@ -93,7 +111,7 @@ const PartyListCard = ({ region, votesData, estimatedVotesIn, lastUpdate }: Prop
                     <p className='font-semibold text-xs md:text-sm lg:text-base'>{region}</p>
                 </div>
             </div>
-            <div className="flex-grow overflow-y-auto" style={{ maxHeight: 'calc(3.19rem * 12)' }}>
+            <div className="flex-grow overflow-y-auto scrollbar-hide" style={{ maxHeight: 'calc(3.19rem * 12)' }}>
                 <table className="w-full border-collapse text-sm">
                     <thead className="text-left">
                         {
@@ -137,7 +155,10 @@ const PartyListCard = ({ region, votesData, estimatedVotesIn, lastUpdate }: Prop
                                 <div className="absolute left-0 top-0 h-full w-full z-10 pointer-events-none">
                                     <div
                                         className="h-full bg-black/10 transition-all duration-500 ease-in-out"
-                                        style={{ width: `${row.original.percent}%` }}
+                                        style={{
+                                            marginLeft: '80px',
+                                            width: `calc((100% - 80px) * ${row.original.percent / 100})`
+                                        }}
                                     />
                                 </div>
                             </tr>

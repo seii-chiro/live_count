@@ -134,7 +134,10 @@ const ResultCard = ({ region, votesData, estimatedVotesIn, lastUpdate }: Props) 
                                 <div className="absolute left-0 top-0 h-full w-full z-10 pointer-events-none">
                                     <div
                                         className="h-full bg-black/10 transition-all duration-500 ease-in-out"
-                                        style={{ width: `${row.original.percent}%` }}
+                                        style={{
+                                            marginLeft: '36px',
+                                            width: `calc((100% - 36px) * ${row.original.percent / 100})`
+                                        }}
                                     />
                                 </div>
                             </tr>
