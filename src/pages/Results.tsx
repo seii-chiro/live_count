@@ -1,6 +1,7 @@
 import CandidateVotesCard from "@/components/cards/results/CandidateVotesCard";
 import ResultCard from "@/components/cards/results/ResultCard"
 import Map from "@/map/Map"
+import MapPlaceHolder from "@/map/MapPlaceholder";
 
 const candidates = [
   { name: 'Go, Bong', percent: 56.8, votes: 23_435_453, partylist: 'AP' },
@@ -116,9 +117,9 @@ const Results = () => {
   return (
     <>
       <div className="w-full border-y border-[#D8D8D8] mt-8 py-10 lg:py-0">
-        <div className="w-[90%] flex flex-col lg:flex-row items-center mx-auto">
+        <div className="w-[90%] min-h-screen flex flex-col lg:flex-row items-center mx-auto">
           <div className="flex-grow">
-            <Map />
+            <MapPlaceHolder />
           </div>
           <div className="w-full lg:w-[30%]">
             <CandidateVotesCard
@@ -182,6 +183,10 @@ const Results = () => {
             />
           </div>
         </div>
+      </div>
+
+      <div>
+        <Map />
       </div>
     </>
   )

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PH Map Only</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="../src/map/css/map.css">
+</head>
+<body>
+  <div class="header">
+    <h3>ELECTION RETURNS PROCESSED</h3>
+  </div>
+  <div id="map"></div>
+  
+  <button class="toggle-btn" onclick="toggleMapUI()">
+    <img src="./icon/search.png" style="width: 20px; height: 20px;" alt="Search Icon">
+        <p style="font-size: 16px; margin-left: 5px; font-weight: 700; color: #EBB136">Search & Filter</p>
+  </button>
+
+  <div class="overlay" id="modalOverlay" onclick="toggleMapUI()"></div>
+  <div class="map-ui" id="mapUI">
+    <div>
+      <div style="display: flex; align-items: center; font-family: 'Poppins';">
+        <img src="./icon/search.png" style="width: 20px;" alt="Search Icon">
+        <p style="font-size: 16px; margin-left: 5px; font-weight: 700; color: #EBB136">Search & Filter</p>
+      </div>
+      <div class="search-container">
+        <img class="search-icon" src="./icon/magnifying-glass.png" alt="Search Icon">
+        <input type="text" class="search-input" placeholder="Search Location, Candidate, or Party List">
+      </div>
+    </div>
+    <div style="display: flex; align-items: center;">
+      <img src="./icon/funnel.png" style="width: 20px;" alt="Filter Icon">
+      <p style="font-size: 16px; margin-left: 5px; font-weight: 700; color: #EBB136">Filter by Location</p>
+    </div>
+    <div class="select-wrapper">
+      <select id="regionSelect" onchange="handleRegionChange()">
+          <option value="">Select Region</option>
+          <option value="region01">Region I</option>
+          <option value="region02">Region II</option>
+          <option value="region03">Region III</option>
+          <option value="region04a">Region IV-A</option>
+          <option value="region04b">Region IV-B</option>
+          <option value="region05">Region V</option>
+          <option value="region06">Region VI</option>
+          <option value="region07">Region VII</option>
+          <option value="region08">Region VIII</option>
+          <option value="region09">Region IX</option>
+          <option value="region10">Region X</option>
+          <option value="region11">Region XI</option>
+          <option value="region12">Region XII</option>
+          <option value="region13">Region XIII</option>
+          <option value="CAR">CAR</option>
+          <option value="NCR">NCR</option>
+          <option value="BARMM">BARMM</option>
+      </select>
+    </div>
+    <div class="select-wrapper">
+      <select id="provinceSelect" onchange="handleProvinceChange()" disabled>
+        <option value="">Select Province</option>
+      </select>
+    </div>
+    <div class="select-wrapper">
+      <select id="municipalitySelect" onchange="handleMunicipalityChange()" disabled>
+        <option value="">-- Select a Municipality --</option>
+      </select>
+    </div>
+    <div style="margin-top: 7px; display: flex; justify-content: space-between; gap: 25px;">
+      <button class="btn-filter">Apply Filters</button>
+      <button class="btn-reset">Reset</button>
+    </div>
+  </div>
+
+  <div id="regionModal">
+    <div id="regionInfo" class="region-info"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map', {
+      center: [12.8797, 121.7740],
+      zoom: 6,
+      zoomControl: false,
+      attributionControl: false
+    });
+    fetch('../src/map/2023/geojson/country/lowres/country.0.001.json')
+      .then(response => response.json())
+      .then(geojsonData => {
+        const geoLayer = L.geoJSON(geojsonData, {
+          style: {
+            color: '#000',      
+            fillColor: '#E9BC49', 
+            fillOpacity: 1,
+            weight: 1
+          }
+        }).addTo(map);
+        map.fitBounds(geoLayer.getBounds());
+      });
+
+      let regionLayer = null;
+
+      const regionMap = {
+        region01: '100000000',
+        region02: '200000000',
+        region03: '300000000',
+        region04a: '400000000',
+        region04b: '1700000000',
+        region05: '500000000',
+        region06: '600000000',
+        region07: '700000000',
+        region08: '800000000',
+        region09: '900000000',
+        region10: '1000000000',
+        region11: '1100000000',
+        region12: '1200000000',
+        region13: '1600000000',
+        CAR: '1400000000',
+        NCR: '1300000000',
+        BARMM: '1900000000'
+      };
+
+      const regionCounts = {
+        region01: { provinces: 4, municipalities: 116 },
+        region02: { provinces: 4, municipalities: 89 },
+        region03: { provinces: 7, municipalities: 116 },
+        region04a: { provinces: 5, municipalities: 122 },
+        region04b: { provinces: 5, municipalities: 71 },
+        region05: { provinces: 6, municipalities: 107 },
+        region06: { provinces: 6, municipalities: 117 },
+        region07: { provinces: 4, municipalities: 116 },
+        region08: { provinces: 6, municipalities: 136 },
+        region09: { provinces: 3, municipalities: 67 },
+        region10: { provinces: 5, municipalities: 84 },
+        region11: { provinces: 5, municipalities: 43 },
+        region12: { provinces: 4, municipalities: 45 },
+        region13: { provinces: 5, municipalities: 67 },
+        CAR: { provinces: 6, municipalities: 75 },
+        NCR: { provinces: 16, municipalities: 1 },
+        BARMM: { provinces: 6, municipalities: 116 }
+    };
+
+  function handleRegionChange() {
+      const selectedRegion = document.getElementById('regionSelect').value;
+      if (regionLayer) {
+          map.removeLayer(regionLayer);
+          regionLayer = null;
+      }
+
+      const regionModal = document.getElementById('regionModal');
+      const regionInfoDiv = document.querySelector('#regionModal .region-info');
+
+      const regionSelectEl = document.getElementById('regionSelect');
+      const selectedRegionName = regionSelectEl.options[regionSelectEl.selectedIndex].text;
+
+      if (selectedRegion && regionMap[selectedRegion]) {
+          const regionColor = '#000';
+
+          const provinceCount = regionCounts[selectedRegion].provinces;
+          const municipalityCount = regionCounts[selectedRegion].municipalities;
+
+          regionModal.style.display = 'block';
+          regionInfoDiv.innerHTML = `
+          <div>
+            <div class="header-region" style="padding: 12px;">
+              <p style="color: black; font-size: 18px; font-weight: 700;">Election Returns Data</p>
+              <p class="region" style="padding: 4px;">${selectedRegionName}</p>
+            </div>
+            <div style="padding: 12px; border-bottom: 1px solid #D8D8D8; display: flex; justify-content: space-between; font-family: 'Roboto Condensed'; ">
+              <div>
+                <p style="color: black; font-size: 18px; font-weight: 700;">Voting Population</p>
+                <p style="color: #8E8E8E; font-size: 14px; font-weight: 400; padding: 2px 0;">${provinceCount} Provinces, ${municipalityCount} Municipalities</p>
+              </div>
+              <p style="color: black; font-size: 18px; font-weight: 700;">2,312,797</p>
+            </div>
+            <div style="padding: 12px; border-bottom: 1px solid #D8D8D8; display: flex; justify-content: space-between; font-family: 'Roboto Condensed'">
+              <p style="color: black; font-size: 18px; font-weight: 700;">Total ERs</p>
+              <p style="color: black; font-size: 18px; font-weight: 700;">12,458</p>
+            </div>
+            <div style="padding: 12px; border-bottom: 1px solid #D8D8D8; display: flex; justify-content: space-between; font-family: 'Roboto Condensed'">
+              <p style="color: black; font-size: 18px; font-weight: 700;">Returns Processed</p>
+              <p style="color: black; font-size: 18px; font-weight: 700;">92.77%</p>
+            </div>
+            <div class="updated" style="padding: 12px; font-family: 'Roboto Condensed';">
+                <p style="color: #8E8E8E; font-size: 12px; font-weight: 500;">Updated: 2:47 PM - May 13, 2022</p>
+            </div>
+          </div>
+          `;
+          
+          const regionFile = `../src/map/2023/geojson/regions/lowres/provdists-region-${regionMap[selectedRegion]}.0.001.json`;
+
+          fetch(regionFile)
+              .then(response => response.json())
+              .then(regionData => {
+                  regionLayer = L.geoJSON(regionData, {
+                      style: {
+                          color: '#000',
+                          fillColor: '#000',
+                          fillOpacity: 1,
+                          weight: 2
+                      }
+                  }).addTo(map);
+              })
+              .catch(error => {
+                  console.error('Failed to load region GeoJSON:', error);
+              });
+      } else {
+          regionModal.style.display = 'none';
+          regionInfoDiv.innerHTML = '';
+      }
+  }
+
+  function toggleMapUI() {
+      const mapUI = document.getElementById('mapUI');
+      const overlay = document.getElementById('modalOverlay');
+      const isVisible = mapUI.style.display === 'block';
+
+      mapUI.style.display = isVisible ? 'none' : 'block';
+      overlay.style.display = isVisible ? 'none' : 'block';
+    }
+  </script>
+</body>
+</html>
