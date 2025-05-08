@@ -24,6 +24,7 @@ type Candidates_Partylist = {
     name: string;
     percent: number;
     votes: number;
+    partylist?: string;
 }
 
 type TableDataProps = {
@@ -75,7 +76,15 @@ const columns: ColumnDef<TableDataProps, any>[] = [
     },
     columnHelper.accessor('name', {
         header: () => 'CANDIDATE',
-        cell: info => <strong>{info.getValue()}</strong>,
+        cell: info => {
+            const row = info.row.original;
+            return (
+                <div className="flex flex-col">
+                    <strong className="text-black">{row?.name}</strong>
+                    <span className="text-xs text-gray-500">{row?.partylist}</span>
+                </div>
+            );
+        },
         meta: {
             align: 'left',
             padding: 'pl-2',
