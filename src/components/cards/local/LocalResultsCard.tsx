@@ -9,7 +9,7 @@ import {
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import fallback_img from "@/assets/fallback_img.png"
-import { useSettingsStore } from '@/store/useSettingsStore';
+import { useSettingsStore, type SettingsState } from '@/store/useSettingsStore';
 
 declare module '@tanstack/react-table' {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint, @typescript-eslint/no-unused-vars
@@ -45,10 +45,36 @@ type ColumnMeta = {
     padding?: string;
 }
 
+type PhotoFlagKeys = {
+    [K in keyof SettingsState]: SettingsState[K] extends boolean ? K : never;
+}[keyof SettingsState];
+
+// const positionToPhotoFlagMap: Record<string, keyof ReturnType<typeof useSettingsStore>> = {
+//     'SENATOR': 'showSenatorPhoto',
+//     'GOVERNOR': 'showGovernorPhoto',
+//     'VICE-GOVERNOR': 'showViceGovernorPhoto',
+//     'HOUSE OF REPRESENTATIVES': 'showHouseOfRepresentativeMemberPhoto',
+//     'SANGGUNIANG PANLALAWIGAN': 'showSangguaniangPanlalawiganPhoto',
+//     'PARTYLIST': 'showPartylistPhoto',
+// };
+
+const positionToPhotoFlagMap: Record<string, PhotoFlagKeys> = {
+    'SENATOR': 'showSenatorPhoto',
+    'GOVERNOR': 'showGovernorPhoto',
+    'VICE-GOVERNOR': 'showViceGovernorPhoto',
+    'HOUSE OF REPRESENTATIVES': 'showHouseOfRepresentativeMemberPhoto',
+    'SANGGUNIANG PANLALAWIGAN': 'showSangguaniangPanlalawiganPhoto',
+    'PARTYLIST': 'showPartylistPhoto',
+};
+
+
 const columnHelper = createColumnHelper<Candidates_Partylist>();
 
 const LocalResultsCard = ({ region, votesData, estimatedVotesIn, lastUpdate, location, position }: Props) => {
-    const showSenatorPhoto = useSettingsStore()?.showSenatorPhoto
+    const settings = useSettingsStore();
+    const normalizedPosition = position.trim().toUpperCase();
+    const photoFlagKey = positionToPhotoFlagMap[normalizedPosition];
+    const showPhoto = photoFlagKey ? settings[photoFlagKey] : false;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const columns: ColumnDef<Candidates_Partylist, any>[] = [
         {
@@ -71,7 +97,7 @@ const LocalResultsCard = ({ region, votesData, estimatedVotesIn, lastUpdate, loc
                 const row = info.row.original;
                 return (
                     <div className="flex items-center gap-2">
-                        {showSenatorPhoto && (
+                        {showPhoto && (
                             <img
                                 src={row.imgSrc || fallback_img}
                                 alt={row.name}
@@ -184,8 +210,8 @@ const LocalResultsCard = ({ region, votesData, estimatedVotesIn, lastUpdate, loc
                                     <div
                                         className="h-full transition-all duration-500 ease-in-out"
                                         style={{
-                                            marginLeft: showSenatorPhoto ? '80px' : '32px',
-                                            width: `calc((100% - ${showSenatorPhoto ? '80px' : '32px'}) * ${row.original.percent / 100})`,
+                                            marginLeft: showPhoto ? '80px' : '32px',
+                                            width: `calc((100% - ${showPhoto ? '80px' : '32px'}) * ${row.original.percent / 100})`,
                                         }}
                                     />
                                 </div>
