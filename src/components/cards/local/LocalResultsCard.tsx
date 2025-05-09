@@ -49,14 +49,6 @@ type PhotoFlagKeys = {
     [K in keyof SettingsState]: SettingsState[K] extends boolean ? K : never;
 }[keyof SettingsState];
 
-// const positionToPhotoFlagMap: Record<string, keyof ReturnType<typeof useSettingsStore>> = {
-//     'SENATOR': 'showSenatorPhoto',
-//     'GOVERNOR': 'showGovernorPhoto',
-//     'VICE-GOVERNOR': 'showViceGovernorPhoto',
-//     'HOUSE OF REPRESENTATIVES': 'showHouseOfRepresentativeMemberPhoto',
-//     'SANGGUNIANG PANLALAWIGAN': 'showSangguaniangPanlalawiganPhoto',
-//     'PARTYLIST': 'showPartylistPhoto',
-// };
 
 const positionToPhotoFlagMap: Record<string, PhotoFlagKeys> = {
     'SENATOR': 'showSenatorPhoto',
@@ -64,7 +56,7 @@ const positionToPhotoFlagMap: Record<string, PhotoFlagKeys> = {
     'VICE-GOVERNOR': 'showViceGovernorPhoto',
     'HOUSE OF REPRESENTATIVES': 'showHouseOfRepresentativeMemberPhoto',
     'SANGGUNIANG PANLALAWIGAN': 'showSangguaniangPanlalawiganPhoto',
-    'PARTYLIST': 'showPartylistPhoto',
+    'PARTY-LIST': 'showPartylistPhoto',
 };
 
 
@@ -160,7 +152,9 @@ const LocalResultsCard = ({ region, votesData, estimatedVotesIn, lastUpdate, loc
                     </div>
                 </div>
                 <div className='w-full px-2 pb-1'>
-                    <p className='font-bold text-base md:text-xl lg:text-xl font-[Poppins] '>{position}</p>
+                    <p className='font-bold text-base md:text-xl lg:text-xl font-[Poppins] '>
+                        {position}
+                    </p>
                 </div>
             </div>
             <div>
