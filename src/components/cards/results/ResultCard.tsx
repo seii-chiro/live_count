@@ -120,7 +120,7 @@ const ResultCard = ({ region, votesData, estimatedVotesIn, lastUpdate }: Props) 
                         {table.getRowModel().rows.map(row => (
                             <tr
                                 key={row.id}
-                                className="relative h-12 group"
+                                className="relative h-12 group cursor-pointer"
                                 onClick={() => navigate('/local/province', { state: { rowData: row.original, region: region } })}
                             >
                                 {row.getVisibleCells().map(cell => (

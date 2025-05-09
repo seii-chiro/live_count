@@ -10,7 +10,11 @@ const RootLayout = () => {
         <div className="flex flex-col min-h-screen">
             <ScrollToTop />
             <Header />
-            <Navbar />
+
+            <div className="sticky top-0 z-[5000] bg-white">
+                <Navbar />
+            </div>
+
             <MiniHero />
 
             <main className="flex-1 w-full">

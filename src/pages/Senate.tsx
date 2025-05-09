@@ -1,5 +1,5 @@
 import SenatorsCard from "@/components/cards/senate/SenatorsCard";
-import MapPlaceHolder from "@/map/MapPlaceholder";
+import PhilippinesMap from "@/map/components/PhilippineMap";
 
 const candidates = [
   { name: 'Go, Bong', percent: 56.8, votes: 23_435_453, partylist: 'AP', imgSrc: null },
@@ -33,7 +33,7 @@ const Senate = () => {
     <div className="w-full border-y border-[#D8D8D8] mt-8 py-10 lg:py-0">
       <div className="w-[90%] flex flex-col lg:flex-row items-center mx-auto">
         <div className="flex-grow">
-          <MapPlaceHolder />
+          <PhilippinesMap />
         </div>
         <div className="w-full lg:w-[30%]">
           <SenatorsCard
