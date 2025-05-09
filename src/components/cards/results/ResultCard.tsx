@@ -121,7 +121,7 @@ const ResultCard = ({ region, votesData, estimatedVotesIn, lastUpdate }: Props) 
                             <tr
                                 key={row.id}
                                 className="relative h-12 group"
-                                onClick={() => navigate('province', { state: { rowData: row.original, region: region } })}
+                                onClick={() => navigate('/local/province', { state: { rowData: row.original, region: region } })}
                             >
                                 {row.getVisibleCells().map(cell => (
                                     <td

@@ -19,7 +19,7 @@ const candidates = [
 
 const Province = () => {
     const location = useLocation();
-    const { rowData, region } = location.state as { rowData: RowData; region: string };
+    const { rowData, region } = location?.state as { rowData: RowData; region: string };
 
     return (
         <div className="flex flex-col items-center justify-center bg-[#F0F0F0] mt-8 ">
@@ -78,7 +78,7 @@ const Province = () => {
 
                 <div className="flex flex-col lg:flex-row gap-8">
                     <LocalResultsCard
-                        position='Governor'
+                        position='Senator'
                         location={rowData?.location}
                         region={region}
                         votesData={candidates}
@@ -86,7 +86,7 @@ const Province = () => {
                         lastUpdate="Updated: 2:47 PM - May 13, 2022"
                     />
                     <LocalResultsCard
-                        position='Vice-Governor'
+                        position='Party-List'
                         location={rowData?.location}
                         region={region}
                         votesData={candidates}

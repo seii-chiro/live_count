@@ -7,6 +7,20 @@ interface SettingsState {
 
   showSenatorPhoto: boolean;
   setShowSenatorPhoto: (value: boolean) => void;
+
+  showGovernorPhoto: boolean;
+  setShowGovernorPhoto: (value: boolean) => void;
+
+  showViceGovernorPhoto: boolean;
+  setShowViceGovernorPhoto: (value: boolean) => void;
+
+  showHouseOfRepresentativeMemberPhoto: boolean;
+  setShowHouseOfRepresentativeMemberPhoto: (value: boolean) => void;
+
+  showSangguaniangPanlalawiganPhoto: boolean;
+  setShowSangguaniangPanlalawiganPhoto: (value: boolean) => void;
+
+  toggleAllPhotos: (value: boolean) => void;
 }
 
 export const useSettingsStore = create(
@@ -17,6 +31,31 @@ export const useSettingsStore = create(
 
       showSenatorPhoto: true,
       setShowSenatorPhoto: (value) => set({ showSenatorPhoto: value }),
+
+      showGovernorPhoto: true,
+      setShowGovernorPhoto: (value) => set({ showGovernorPhoto: value }),
+
+      showViceGovernorPhoto: true,
+      setShowViceGovernorPhoto: (value) =>
+        set({ showViceGovernorPhoto: value }),
+
+      showHouseOfRepresentativeMemberPhoto: true,
+      setShowHouseOfRepresentativeMemberPhoto: (value) =>
+        set({ showHouseOfRepresentativeMemberPhoto: value }),
+
+      showSangguaniangPanlalawiganPhoto: true,
+      setShowSangguaniangPanlalawiganPhoto: (value) =>
+        set({ showSangguaniangPanlalawiganPhoto: value }),
+
+      toggleAllPhotos: (value: boolean) =>
+        set({
+          showPartylistPhoto: value,
+          showSenatorPhoto: value,
+          showGovernorPhoto: value,
+          showViceGovernorPhoto: value,
+          showHouseOfRepresentativeMemberPhoto: value,
+          showSangguaniangPanlalawiganPhoto: value,
+        }),
     }),
     {
       name: "settings-session",
