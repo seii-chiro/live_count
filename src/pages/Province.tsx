@@ -160,7 +160,7 @@ const Province = () => {
 
                 <div className="flex flex-col lg:flex-row gap-8">
                     <LocalResultsCard
-                        position='Governor'
+                        position='Member, Sangguniang Panlalawigan - FIRST LEGDIST'
                         location={rowData?.location}
                         region={region}
                         votesData={votesData?.Governor}
@@ -168,7 +168,7 @@ const Province = () => {
                         lastUpdate="Updated: 2:47 PM - May 13, 2022"
                     />
                     <LocalResultsCard
-                        position='Vice-Governor'
+                        position='Member, Sangguniang Panlalawigan - SECOND LEGDIST'
                         location={rowData?.location}
                         region={region}
                         votesData={votesData?.['Vice-Governor']}

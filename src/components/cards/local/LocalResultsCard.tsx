@@ -54,8 +54,10 @@ const positionToPhotoFlagMap: Record<string, PhotoFlagKeys> = {
     'SENATOR': 'showSenatorPhoto',
     'GOVERNOR': 'showGovernorPhoto',
     'VICE-GOVERNOR': 'showViceGovernorPhoto',
-    'HOUSE OF REPRESENTATIVES': 'showHouseOfRepresentativeMemberPhoto',
-    'SANGGUNIANG PANLALAWIGAN': 'showSangguaniangPanlalawiganPhoto',
+    'MEMBER, HOUSE OF REPRESENTATIVES - FIRST LEGDIST': 'showHouseOfRepresentativeMemberPhoto',
+    'MEMBER, HOUSE OF REPRESENTATIVES - SECOND LEGDIST': 'showHouseOfRepresentativeMemberPhoto',
+    'MEMBER, SANGGUNIANG PANLALAWIGAN - FIRST LEGDIST': 'showSangguaniangPanlalawiganPhoto',
+    'MEMBER, SANGGUNIANG PANLALAWIGAN - SECOND LEGDIST': 'showSangguaniangPanlalawiganPhoto',
     'PARTY-LIST': 'showPartylistPhoto',
 };
 
@@ -64,7 +66,7 @@ const columnHelper = createColumnHelper<Candidates_Partylist>();
 
 const LocalResultsCard = ({ region, votesData, estimatedVotesIn, lastUpdate, location, position }: Props) => {
     const settings = useSettingsStore();
-    const normalizedPosition = position.trim().toUpperCase();
+    const normalizedPosition = position.toUpperCase();
     const photoFlagKey = positionToPhotoFlagMap[normalizedPosition];
     const showPhoto = photoFlagKey ? settings[photoFlagKey] : false;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

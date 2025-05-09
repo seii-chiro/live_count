@@ -7,7 +7,7 @@ import {
     type ColumnDef
 } from '@tanstack/react-table';
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import fallback_img from "@/assets/fallback_img.png"
 import { useSettingsStore, type SettingsState } from '@/store/useSettingsStore';
 import Select from '@/components/Select';
@@ -58,9 +58,11 @@ const positionToPhotoFlagMap: Record<string, PhotoFlagKeys> = {
     'SENATOR': 'showSenatorPhoto',
     'GOVERNOR': 'showGovernorPhoto',
     'VICE-GOVERNOR': 'showViceGovernorPhoto',
-    'HOUSE OF REPRESENTATIVES': 'showHouseOfRepresentativeMemberPhoto',
-    'SANGGUNIANG PANLALAWIGAN': 'showSangguaniangPanlalawiganPhoto',
-    'PARTYLIST': 'showPartylistPhoto',
+    'MEMBER, HOUSE OF REPRESENTATIVES - FIRST LEGDIST': 'showHouseOfRepresentativeMemberPhoto',
+    'MEMBER, HOUSE OF REPRESENTATIVES - SECOND LEGDIST': 'showHouseOfRepresentativeMemberPhoto',
+    'MEMBER, SANGGUNIANG PANLALAWIGAN - FIRST LEGDIST': 'showSangguaniangPanlalawiganPhoto',
+    'MEMBER, SANGGUNIANG PANLALAWIGAN - SECOND LEGDIST': 'showSangguaniangPanlalawiganPhoto',
+    'PARTY-LIST': 'showPartylistPhoto',
 };
 
 const rankColors = [
@@ -83,21 +85,25 @@ const columnHelper = createColumnHelper<Candidate>();
 
 const MultiPositionCard = ({ region, votesData, estimatedVotesIn, lastUpdate, location, onPositionChange }: Props) => {
     const [selectedPosition, setSelectedPosition] = useState("");
-    
+
+    useEffect(() => {
+        setSelectedPosition(positions[0]?.value)
+    }, [])
+
     // Use the hook directly to make it reactive
     const settings = useSettingsStore();
-    
+
     const showPhoto = useMemo(() => {
         if (!selectedPosition) return false;
-        
+
         const normalizedPosition = selectedPosition.toUpperCase();
         // Find the most appropriate match for the selected position
         let flagKey: PhotoFlagKeys | undefined;
-        
+
         // Direct match
         if (positionToPhotoFlagMap[normalizedPosition]) {
             flagKey = positionToPhotoFlagMap[normalizedPosition];
-        } 
+        }
         // Check for partial matches
         else {
             if (normalizedPosition.includes('SENATOR')) {
@@ -114,7 +120,7 @@ const MultiPositionCard = ({ region, votesData, estimatedVotesIn, lastUpdate, lo
                 flagKey = 'showPartylistPhoto';
             }
         }
-        
+
         return flagKey ? settings[flagKey] : false;
     }, [selectedPosition, settings]);
 
