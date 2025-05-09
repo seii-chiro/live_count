@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router"
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router"
 import RootLayout from "@/layout/RootLayout"
 import { lazy, Suspense } from "react"
 import Spinner from "@/components/Spinner"
@@ -24,7 +24,7 @@ function App() {
       children: [
         {
           index: true,
-          element: <Results />
+          element: <Navigate to="/results" replace />
         },
         {
           path: "results",
