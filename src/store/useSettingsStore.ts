@@ -32,18 +32,18 @@ export const useSettingsStore = create(
       showSenatorPhoto: true,
       setShowSenatorPhoto: (value) => set({ showSenatorPhoto: value }),
 
-      showGovernorPhoto: true,
+      showGovernorPhoto: false,
       setShowGovernorPhoto: (value) => set({ showGovernorPhoto: value }),
 
-      showViceGovernorPhoto: true,
+      showViceGovernorPhoto: false,
       setShowViceGovernorPhoto: (value) =>
         set({ showViceGovernorPhoto: value }),
 
-      showHouseOfRepresentativeMemberPhoto: true,
+      showHouseOfRepresentativeMemberPhoto: false,
       setShowHouseOfRepresentativeMemberPhoto: (value) =>
         set({ showHouseOfRepresentativeMemberPhoto: value }),
 
-      showSangguaniangPanlalawiganPhoto: true,
+      showSangguaniangPanlalawiganPhoto: false,
       setShowSangguaniangPanlalawiganPhoto: (value) =>
         set({ showSangguaniangPanlalawiganPhoto: value }),
 
